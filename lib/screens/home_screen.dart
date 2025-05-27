@@ -1,14 +1,15 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:sportsapp/services/auth_service.dart';
 import 'package:sportsapp/screens/login_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-  void _logout(BuildContext context) async {
-    await FirebaseAuth.instance.signOut();
-
-    //* navigate back to login screen
+  Future<void> _logout(BuildContext context) async {
+    //* Create an instance of AuthService to handle sign out
+    final authService = AuthService();
+    await authService.signOut();
+    
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => const LoginScreen()),
@@ -17,15 +18,15 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser;
+    final authService = AuthService();
+    final user = authService.auth.currentUser;
 
     if (user != null) {
-      print("UID: ${user.uid}");
-      print("Email: ${user.email}");
-      print("Display Name: ${user.displayName}");
-      print("Photo URL: ${user.photoURL}");
-    } else {
-      print("No user is currently signed in.");
+      debugPrint("User Data:"); // Better than print for Flutter
+      debugPrint("UID: ${user.uid}");
+      debugPrint("Email: ${user.email}");
+      debugPrint("Display Name: ${user.displayName}");
+      debugPrint("Photo URL: ${user.photoURL}");
     }
 
     return Scaffold(
@@ -35,11 +36,24 @@ class HomeScreen extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () => _logout(context),
-            tooltip: 'Logout',
           ),
         ],
       ),
-      body: const Center(child: Text('Home Screeen')),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (user?.photoURL != null)
+              CircleAvatar(
+                backgroundImage: NetworkImage(user!.photoURL!),
+                radius: 40,
+              ),
+            const SizedBox(height: 20),
+            Text('Welcome ${user?.displayName ?? 'User'}'),
+            Text(user?.email ?? ''),
+          ],
+        ),
+      ),
     );
   }
 }
