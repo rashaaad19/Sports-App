@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:sportsapp/cubit/leagues_cubit.dart';
+import 'package:sportsapp/repos/leagues_repo.dart';
 
 import 'firebase_options.dart';
 import 'package:sportsapp/cubit/countries_cubit.dart';
@@ -28,9 +30,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Add many BlocProviders 
+    // Add many BlocProviders
     return MultiBlocProvider(
-      providers: [BlocProvider(create: (_) => CountriesCubit(CountryRepo()))],
+      providers: [
+        BlocProvider(create: (_) => CountriesCubit(CountryRepo())),
+        BlocProvider(create: (_) => LeaguesCubit(LeaguesRepo())),
+      ],
       child: ScreenUtilInit(
         designSize: const Size(375, 812),
         minTextAdapt: true,
