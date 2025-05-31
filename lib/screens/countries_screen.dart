@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sportsapp/cubit/countries_cubit.dart';
 import 'package:sportsapp/cubit/countries_state.dart';
 import 'package:sportsapp/data/models/countries_model.dart';
+import 'package:sportsapp/util/scroll_utils.dart';
 import 'package:sportsapp/widgets/main_app_scaffold.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -13,38 +14,89 @@ class CountriesScreen extends StatefulWidget {
   State<CountriesScreen> createState() => _CountriesScreenState();
 }
 
+
 class _CountriesScreenState extends State<CountriesScreen> {
+  //* Controller to manage the scroll position of the ListView
+  final ScrollController _scrollController = ScrollController();
+
+//* Fetch countries when the screen is initialized
   @override
-  //* Automatically fetch countries when screen opens
   void initState() {
     super.initState();
     context.read<CountriesCubit>().fetchCountries();
   }
 
-  Widget _buildUI(CountryResponseModel countryResponse) {
+  //* UI builder method to display the list of countries
+  Widget _buildUI(CountryResponseModel countryResponse, String? userCountry) {
     final countries = countryResponse.result;
 
+    //* Scroll to the user's country if it exists
+    scrollToUserCountry(userCountry, countries, _scrollController); 
     return MainAppScaffold(
       showDrawer: true,
-      child: ListView.builder(
-        itemCount: countries.length,
-        itemBuilder: (context, index) {
-          final country = countries[index];
-
-          return Padding(
-            padding: const EdgeInsets.all(5.0),
-            child: ListTile(
-              leading:
-                  country.countryLogo != null
-                      ? Image.network(country.countryLogo!, width: 30.w, height: 30.h)
-                      : const Icon(Icons.flag),
-              title:
-                  country.countryName != null
-                      ? Text(country.countryName!, style: TextStyle(fontSize: 16.sp,fontWeight: FontWeight.w500))
-                      : const Text('Unknown Country'),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                const Icon(Icons.location_on, color: Colors.red),
+                const SizedBox(width: 8),
+                Text(
+                  userCountry ?? "Location not detected",
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
             ),
-          );
-        },
+          ),
+          Expanded(
+            child: ListView.builder(
+              controller: _scrollController,
+              itemCount: countries.length,
+              itemExtent: 80.0,
+              itemBuilder: (context, index) {
+                final country = countries[index];
+                final isUserCountry =
+                    userCountry != null && country.countryName == userCountry;
+
+                return Padding(
+                  padding: const EdgeInsets.all(5.0),
+                  child: Container(
+                    decoration:
+                        isUserCountry
+                            ? BoxDecoration(
+                              color: Colors.green.withOpacity(0.2),
+                              border: Border.all(color: Colors.green, width: 2),
+                              borderRadius: BorderRadius.circular(12),
+                            )
+                            : null,
+                    child: ListTile(
+                      leading:
+                          country.countryLogo != null
+                              ? Image.network(
+                                country.countryLogo!,
+                                width: 30.w,
+                                height: 30.h,
+                              )
+                              : const Icon(Icons.flag),
+                      title: Text(
+                        country.countryName ?? 'Unknown Country',
+                        style: TextStyle(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -61,7 +113,7 @@ class _CountriesScreenState extends State<CountriesScreen> {
               ),
             );
           } else if (state is CountriesLoaded) {
-            return _buildUI(state.countryResponse);
+            return _buildUI(state.countryResponse, state.userCountry);
           } else if (state is CountriesError) {
             return Center(child: Text(state.message));
           }

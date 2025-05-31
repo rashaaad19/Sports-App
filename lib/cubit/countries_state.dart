@@ -8,7 +8,9 @@ class CountriesLoading extends CountriesState {}
 
 class CountriesLoaded extends CountriesState {
   final CountryResponseModel countryResponse;
-  CountriesLoaded(this.countryResponse);
+  final String? userCountry;
+  //* userCountry is optional named parameter
+  CountriesLoaded(this.countryResponse, {this.userCountry});
 }
 
 class CountriesError extends CountriesState {
