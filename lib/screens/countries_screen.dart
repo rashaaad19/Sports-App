@@ -31,15 +31,18 @@ class _CountriesScreenState extends State<CountriesScreen> {
         itemBuilder: (context, index) {
           final country = countries[index];
 
-          return ListTile(
-            leading:
-                country.countryLogo != null
-                    ? Image.network(country.countryLogo!, width: 30, height: 30)
-                    : const Icon(Icons.flag),
-            title:
-                country.countryName != null
-                    ? Text(country.countryName!)
-                    : const Text('Unknown Country'),
+          return Padding(
+            padding: const EdgeInsets.all(5.0),
+            child: ListTile(
+              leading:
+                  country.countryLogo != null
+                      ? Image.network(country.countryLogo!, width: 30.w, height: 30.h)
+                      : const Icon(Icons.flag),
+              title:
+                  country.countryName != null
+                      ? Text(country.countryName!, style: TextStyle(fontSize: 16.sp,fontWeight: FontWeight.w500))
+                      : const Text('Unknown Country'),
+            ),
           );
         },
       ),
@@ -63,7 +66,7 @@ class _CountriesScreenState extends State<CountriesScreen> {
             return Center(child: Text(state.message));
           }
 
-          // While waiting for initial fetch or unexpected state
+          //* While waiting for initial fetch or unexpected state
           return const SizedBox();
         },
       ),
