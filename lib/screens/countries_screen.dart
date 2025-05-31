@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sportsapp/cubit/countries_cubit.dart';
 import 'package:sportsapp/cubit/countries_state.dart';
 import 'package:sportsapp/data/models/countries_model.dart';
+import 'package:sportsapp/screens/leagues_screen.dart';
 import 'package:sportsapp/util/scroll_utils.dart';
 import 'package:sportsapp/widgets/main_app_scaffold.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -14,12 +15,11 @@ class CountriesScreen extends StatefulWidget {
   State<CountriesScreen> createState() => _CountriesScreenState();
 }
 
-
 class _CountriesScreenState extends State<CountriesScreen> {
   //* Controller to manage the scroll position of the ListView
   final ScrollController _scrollController = ScrollController();
 
-//* Fetch countries when the screen is initialized
+  //* Fetch countries when the screen is initialized
   @override
   void initState() {
     super.initState();
@@ -31,7 +31,7 @@ class _CountriesScreenState extends State<CountriesScreen> {
     final countries = countryResponse.result;
 
     //* Scroll to the user's country if it exists
-    scrollToUserCountry(userCountry, countries, _scrollController); 
+    scrollToUserCountry(userCountry, countries, _scrollController);
     return MainAppScaffold(
       showDrawer: true,
       child: Column(
@@ -60,34 +60,50 @@ class _CountriesScreenState extends State<CountriesScreen> {
               itemExtent: 80.0,
               itemBuilder: (context, index) {
                 final country = countries[index];
+                final countryName = country.countryName;
+                final countryImg = country.countryLogo;
                 final isUserCountry =
-                    userCountry != null && country.countryName == userCountry;
+                    userCountry != null && countryName == userCountry;
 
                 return Padding(
                   padding: const EdgeInsets.all(5.0),
-                  child: Container(
-                    decoration:
-                        isUserCountry
-                            ? BoxDecoration(
-                              color: Colors.green.withOpacity(0.2),
-                              border: Border.all(color: Colors.green, width: 2),
-                              borderRadius: BorderRadius.circular(12),
-                            )
-                            : null,
-                    child: ListTile(
-                      leading:
-                          country.countryLogo != null
-                              ? Image.network(
-                                country.countryLogo!,
-                                width: 30.w,
-                                height: 30.h,
+                  child: GestureDetector(
+                    onTap: () {
+                      // Navigate to LeaguesScreen and pass the selected country
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => LeaguesScreen(country: country),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      decoration:
+                          isUserCountry
+                              ? BoxDecoration(
+                                color: Colors.green.withOpacity(0.2),
+                                border: Border.all(
+                                  color: Colors.green,
+                                  width: 2,
+                                ),
+                                borderRadius: BorderRadius.circular(12),
                               )
-                              : const Icon(Icons.flag),
-                      title: Text(
-                        country.countryName ?? 'Unknown Country',
-                        style: TextStyle(
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.w500,
+                              : null,
+                      child: ListTile(
+                        leading:
+                            countryImg != null
+                                ? Image.network(
+                                  country.countryLogo!,
+                                  width: 30.w,
+                                  height: 30.h,
+                                )
+                                : const Icon(Icons.flag),
+                        title: Text(
+                          countryName ?? 'Unknown Country',
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ),
                     ),
