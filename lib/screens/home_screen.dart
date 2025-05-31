@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:sportsapp/screens/countries_screen.dart';
 import 'package:sportsapp/services/auth_service.dart';
 import 'package:sportsapp/widgets/dialog_helpers.dart';
 import 'package:sportsapp/widgets/main_app_scaffold.dart';
@@ -39,7 +40,12 @@ class HomeScreen extends StatelessWidget {
               buildSportCard(
                 title: 'Football',
                 iconPath: 'assets/images/football-icon.svg',
-                onTap: () => print('Football tapped'),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => CountriesScreen()),
+                  );
+                },
               ),
               buildSportCard(
                 title: 'Basketball',
@@ -55,7 +61,6 @@ class HomeScreen extends StatelessWidget {
                 title: 'Tennis',
                 iconPath: 'assets/images/tennis-icon.svg',
                 onTap: () => showComingSoonDialog(context),
-
               ),
             ],
           );
