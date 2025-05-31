@@ -30,7 +30,23 @@ class MyApp extends StatelessWidget {
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
-        return MaterialApp(title: 'Sports App', home: child);
+        return MaterialApp(
+          //solve colors interaction issue
+          theme: ThemeData(
+            scaffoldBackgroundColor: Colors.white,
+            appBarTheme: const AppBarTheme(
+              elevation: 0,
+              scrolledUnderElevation: 0,
+              color: Colors.white,
+            ),
+            colorScheme: ColorScheme.light(
+              surface: Colors.white,
+              onSurface: Colors.black,
+            ),
+          ),
+          title: 'Sports App',
+          home: child,
+        );
       },
       child: isFirstTime ? const OnboardingScreen() : const LoginScreen(),
     );

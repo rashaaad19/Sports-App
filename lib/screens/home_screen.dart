@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sportsapp/services/auth_service.dart';
+import 'package:sportsapp/widgets/dialog_helpers.dart';
 import 'package:sportsapp/widgets/main_app_scaffold.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:sportsapp/widgets/sports_card.dart';
+
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
-
 
   @override
   Widget build(BuildContext context) {
@@ -19,28 +23,43 @@ class HomeScreen extends StatelessWidget {
     }
 
     return MainAppScaffold(
-      showDrawer: true, 
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            if (user?.photoURL != null)
-              CircleAvatar(
-                backgroundImage: NetworkImage(user!.photoURL!),
-                radius: 40,
+      showDrawer: true,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final screenWidth = constraints.maxWidth;
+          final screenHeight = constraints.maxHeight;
+
+          final itemWidth = screenWidth / 2;
+          final itemHeight = screenHeight / 2;
+
+          return GridView.count(
+            crossAxisCount: 2,
+            childAspectRatio: itemWidth / itemHeight,
+            children: [
+              buildSportCard(
+                title: 'Football',
+                iconPath: 'assets/images/football-icon.svg',
+                onTap: () => print('Football tapped'),
               ),
-            const SizedBox(height: 20),
-            Text(
-              'Welcome ${user?.displayName ?? 'User'}',
-              style: Theme.of(context).textTheme.headlineSmall,
-            ),
-            Text(
-              user?.email ?? '',
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-            const SizedBox(height: 20),
-          ],
-        ),
+              buildSportCard(
+                title: 'Basketball',
+                iconPath: 'assets/images/basketball-icon.svg',
+                onTap: () => showComingSoonDialog(context),
+              ),
+              buildSportCard(
+                title: 'Bowling',
+                iconPath: 'assets/images/bowling-icon.svg',
+                onTap: () => showComingSoonDialog(context),
+              ),
+              buildSportCard(
+                title: 'Tennis',
+                iconPath: 'assets/images/tennis-icon.svg',
+                onTap: () => showComingSoonDialog(context),
+
+              ),
+            ],
+          );
+        },
       ),
     );
   }
