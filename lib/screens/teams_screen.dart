@@ -16,12 +16,23 @@ class TeamsScreen extends StatefulWidget {
 }
 
 class _TeamsScreenState extends State<TeamsScreen> {
+  //* Controller to manage the search input
+  final TextEditingController _searchController = TextEditingController();
+  String _searchQuery = '';
+
   @override
   void initState() {
     super.initState();
     final leagueId = widget.leagueKey!;
     context.read<TeamsCubit>().fetchTeamsById(leagueId);
     context.read<TopscorersCubit>().fetchTopScorers(leagueId);
+
+    //* Listen to changes in the search input
+    _searchController.addListener(() {
+      setState(() {
+        _searchQuery = _searchController.text.toLowerCase();
+      });
+    });
   }
 
   @override
@@ -29,7 +40,7 @@ class _TeamsScreenState extends State<TeamsScreen> {
     return DefaultTabController(
       length: 2,
       child: MainAppScaffold(
-        title:'Teams & Top Scorers',
+        title: 'Teams & Top Scorers',
         showBackButton: true,
         child: Column(
           children: [
@@ -48,12 +59,11 @@ class _TeamsScreenState extends State<TeamsScreen> {
                 indicator: BoxDecoration(
                   border: Border(
                     bottom: BorderSide(
-                      color: Color.fromARGB(255, 54, 172, 25),
+                      color: const Color.fromARGB(255, 54, 172, 25),
                       width: 3.w,
                     ),
                   ),
                 ),
-
                 labelStyle: TextStyle(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w800,
@@ -61,7 +71,6 @@ class _TeamsScreenState extends State<TeamsScreen> {
                 tabs: const [Tab(text: 'Teams'), Tab(text: 'Top Scorers')],
               ),
             ),
-
             SizedBox(height: 8.h),
             Expanded(
               child: TabBarView(
@@ -73,31 +82,89 @@ class _TeamsScreenState extends State<TeamsScreen> {
                         return const Center(child: CircularProgressIndicator());
                       } else if (state is TeamsLoaded) {
                         final teams = state.teamResponse.result;
+
                         if (teams.isEmpty) {
                           return const Center(child: Text('No teams found.'));
                         }
-                        return ListView.builder(
-                          itemCount: teams.length,
-                          itemBuilder: (context, index) {
-                            final team = teams[index];
-                            return ListTile(
-                              leading: Image.network(
-                                team.teamLogo ?? '',
-                                width: 40,
-                                height: 40,
-                                errorBuilder:
-                                    (_, __, ___) => const Icon(Icons.error),
+
+                        //* Filter teams based on the search query
+                        final filteredTeams =
+                            teams.where((team) {
+                              final name = team.teamName?.toLowerCase() ?? '';
+                              return name.contains(_searchQuery);
+                            }).toList();
+
+                        return Column(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 12.w,
+                                vertical: 8.h,
                               ),
-                              title: Text(
-                                team.teamName ?? 'Unknown Team',
-                                style: TextStyle(
-                                  fontSize: 16.sp,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.black87,
+                              child: SearchBar(
+                                controller: _searchController,
+                                hintText: 'Search teams...',
+                                leading: Icon(
+                                  Icons.search,
+                                  color: Colors.green.shade500,
+                                ),
+                                elevation: WidgetStateProperty.all(1),
+                                backgroundColor: WidgetStateProperty.all(
+                                  Colors.grey.shade100,
+                                ),
+                                shadowColor: WidgetStateProperty.all(
+                                  Colors.transparent,
+                                ),
+                                shape: WidgetStatePropertyAll(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                                hintStyle: WidgetStateProperty.all(
+                                  TextStyle(
+                                    color: Colors.grey.shade600,
+                                    fontSize: 14.sp,
+                                  ),
+                                ),
+                                textStyle: WidgetStateProperty.all(
+                                  TextStyle(
+                                    fontSize: 15.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black87,
+                                  ),
+                                ),
+                                padding: WidgetStateProperty.all(
+                                  EdgeInsets.symmetric(horizontal: 12.w),
                                 ),
                               ),
-                            );
-                          },
+                            ),
+                            Expanded(
+                              child: ListView.builder(
+                                itemCount: filteredTeams.length,
+                                itemBuilder: (context, index) {
+                                  final team = filteredTeams[index];
+                                  return ListTile(
+                                    leading: Image.network(
+                                      team.teamLogo ?? '',
+                                      width: 40,
+                                      height: 40,
+                                      errorBuilder:
+                                          (_, __, ___) =>
+                                              const Icon(Icons.error),
+                                    ),
+                                    title: Text(
+                                      team.teamName ?? 'Unknown Team',
+                                      style: TextStyle(
+                                        fontSize: 16.sp,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black87,
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
                         );
                       } else if (state is TeamsError) {
                         return Center(child: Text(state.message));
