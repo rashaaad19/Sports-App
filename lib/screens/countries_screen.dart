@@ -69,7 +69,7 @@ class _CountriesScreenState extends State<CountriesScreen> {
                   padding: const EdgeInsets.all(5.0),
                   child: GestureDetector(
                     onTap: () {
-                      // Navigate to LeaguesScreen and pass the selected country
+                      //* Navigate to LeaguesScreen and pass the selected country
                       Navigator.push(
                         context,
                         MaterialPageRoute(
