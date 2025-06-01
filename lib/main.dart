@@ -5,8 +5,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:sportsapp/cubit/leagues_cubit.dart';
 import 'package:sportsapp/cubit/teams_cubit.dart';
+import 'package:sportsapp/cubit/topScorers_cubit.dart';
 import 'package:sportsapp/repos/leagues_repo.dart';
 import 'package:sportsapp/repos/teams_repo.dart';
+import 'package:sportsapp/repos/topScorers_repo.dart';
 
 import 'firebase_options.dart';
 import 'package:sportsapp/cubit/countries_cubit.dart';
@@ -38,6 +40,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => CountriesCubit(CountryRepo())),
         BlocProvider(create: (_) => LeaguesCubit(LeaguesRepo())),
         BlocProvider(create: (_) => TeamsCubit(TeamsRepo())),
+        BlocProvider(create: (_) => TopscorersCubit(TopscorersRepo())),
       ],
       child: ScreenUtilInit(
         designSize: const Size(375, 812),
