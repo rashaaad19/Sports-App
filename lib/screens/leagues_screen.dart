@@ -27,6 +27,7 @@ class _LeaguesScreenState extends State<LeaguesScreen> {
   @override
   Widget build(BuildContext context) {
     return MainAppScaffold(
+      title: 'Leagues',
       showBackButton: true,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

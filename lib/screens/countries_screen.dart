@@ -33,7 +33,9 @@ class _CountriesScreenState extends State<CountriesScreen> {
     //* Scroll to the user's country if it exists
     scrollToUserCountry(userCountry, countries, _scrollController);
     return MainAppScaffold(
+      title:'Countries',
       showDrawer: true,
+      showBackButton: true,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

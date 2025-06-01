@@ -29,6 +29,7 @@ class _TeamsScreenState extends State<TeamsScreen> {
     return DefaultTabController(
       length: 2,
       child: MainAppScaffold(
+        title:'Teams & Top Scorers',
         showBackButton: true,
         child: Column(
           children: [

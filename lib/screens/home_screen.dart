@@ -24,6 +24,7 @@ class HomeScreen extends StatelessWidget {
     }
 
     return MainAppScaffold(
+      title:'Home',
       showDrawer: true,
       child: LayoutBuilder(
         builder: (context, constraints) {
