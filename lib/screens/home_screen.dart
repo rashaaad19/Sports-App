@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sportsapp/screens/countries_screen.dart';
 import 'package:sportsapp/services/auth_service.dart';
 import 'package:sportsapp/widgets/dialog_helpers.dart';
 import 'package:sportsapp/widgets/main_app_scaffold.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sportsapp/widgets/sports_card.dart';
 
 class HomeScreen extends StatelessWidget {

@@ -5,6 +5,7 @@ import 'package:sportsapp/cubit/teams_cubit.dart';
 import 'package:sportsapp/cubit/teams_state.dart';
 import 'package:sportsapp/cubit/topScorers_cubit.dart';
 import 'package:sportsapp/cubit/topScorers_state.dart';
+import 'package:sportsapp/screens/squad_screen.dart';
 import 'package:sportsapp/widgets/main_app_scaffold.dart';
 
 class TeamsScreen extends StatefulWidget {
@@ -79,13 +80,17 @@ class _TeamsScreenState extends State<TeamsScreen> {
                   BlocBuilder<TeamsCubit, TeamsState>(
                     builder: (context, state) {
                       if (state is TeamsLoading) {
-                        return const Center(child: CircularProgressIndicator());
+                        return const Center(
+                          child: CircularProgressIndicator(
+                            color: Color.fromARGB(255, 54, 172, 25),
+                          ),
+                        );
                       } else if (state is TeamsLoaded) {
                         final teams = state.teamResponse.result;
 
-                        if (teams.isEmpty) {
-                          return const Center(child: Text('No teams found.'));
-                        }
+                        // if (teams.isEmpty) {
+                        //   return const Center(child: Text('No teams found.'));
+                        // }
 
                         //* Filter teams based on the search query
                         final filteredTeams =
@@ -143,21 +148,35 @@ class _TeamsScreenState extends State<TeamsScreen> {
                                 itemCount: filteredTeams.length,
                                 itemBuilder: (context, index) {
                                   final team = filteredTeams[index];
-                                  return ListTile(
-                                    leading: Image.network(
-                                      team.teamLogo ?? '',
-                                      width: 40,
-                                      height: 40,
-                                      errorBuilder:
-                                          (_, __, ___) =>
-                                              const Icon(Icons.error),
-                                    ),
-                                    title: Text(
-                                      team.teamName ?? 'Unknown Team',
-                                      style: TextStyle(
-                                        fontSize: 16.sp,
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.black87,
+                                  return GestureDetector(
+                                    onTap:
+                                        () => {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder:
+                                                  (context) => SquadScreen(
+                                                    teamId: team.teamKey!,
+                                                  ),
+                                            ),
+                                          ),
+                                        },
+                                    child: ListTile(
+                                      leading: Image.network(
+                                        team.teamLogo ?? '',
+                                        width: 40,
+                                        height: 40,
+                                        errorBuilder:
+                                            (_, __, ___) =>
+                                                const Icon(Icons.error),
+                                      ),
+                                      title: Text(
+                                        team.teamName ?? 'Unknown Team',
+                                        style: TextStyle(
+                                          fontSize: 16.sp,
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.black87,
+                                        ),
                                       ),
                                     ),
                                   );
