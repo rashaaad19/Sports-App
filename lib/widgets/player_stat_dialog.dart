@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:share_plus/share_plus.dart';
 
 class PlayerStatsDialog extends StatelessWidget {
   final dynamic player;
@@ -17,26 +18,21 @@ class PlayerStatsDialog extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               //* Player Information
-CircleAvatar(
-  radius: 40.r,
-  backgroundColor: Colors.white,
-  child: ClipOval(
-          child: Image.network(
-            player.playerImage!,
-            fit: BoxFit.cover,
-            width: double.infinity,
-            height: double.infinity,
-            errorBuilder: (context, error, stackTrace) {
-              return Icon(
-                Icons.person,
-                size: 75.r,
-                color: Colors.grey,
-              );
-            },
-          ),
-        )
-      
-),
+              CircleAvatar(
+                radius: 40.r,
+                backgroundColor: Colors.white,
+                child: ClipOval(
+                  child: Image.network(
+                    player.playerImage!,
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                    height: double.infinity,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Icon(Icons.person, size: 75.r, color: Colors.grey);
+                    },
+                  ),
+                ),
+              ),
               SizedBox(height: 12.h),
 
               Text(
@@ -82,6 +78,20 @@ CircleAvatar(
                       fontWeight: FontWeight.w700,
                     ),
                   ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.bottomLeft,
+                child: IconButton(
+                  icon: Icon(Icons.share, color: Colors.black87, size: 24.sp),
+                  onPressed: () async {
+                    await SharePlus.instance.share(
+                      ShareParams(
+                        title: player.playerName,
+                        text: 'Checkout ${player.playerName} stats!',
+                      ),
+                    );
+                  },
                 ),
               ),
             ],
