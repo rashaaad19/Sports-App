@@ -9,6 +9,7 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginState();
 }
 
+
 class _LoginState extends State<LoginScreen> {
   //* Instance of AuthService to handle authentication
   final AuthService _authService = AuthService();

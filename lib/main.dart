@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -11,6 +12,7 @@ import 'package:sportsapp/repos/leagues_repo.dart';
 import 'package:sportsapp/repos/squad_repo.dart';
 import 'package:sportsapp/repos/teams_repo.dart';
 import 'package:sportsapp/repos/topScorers_repo.dart';
+import 'package:sportsapp/screens/home_screen.dart';
 
 import 'firebase_options.dart';
 import 'package:sportsapp/cubit/countries_cubit.dart';
@@ -20,22 +22,23 @@ import 'package:sportsapp/screens/onboarding_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   final prefs = await SharedPreferences.getInstance();
   final bool isFirstTime = prefs.getBool('isFirstTime') ?? true;
 
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  final User? user = FirebaseAuth.instance.currentUser;
 
-  runApp(MyApp(isFirstTime: isFirstTime));
+  runApp(MyApp(isFirstTime: isFirstTime,user:user));
 }
 
 class MyApp extends StatelessWidget {
   final bool isFirstTime;
-  const MyApp({super.key, required this.isFirstTime});
+  final User? user;
+  const MyApp({super.key, required this.isFirstTime, required this.user});
 
   @override
   Widget build(BuildContext context) {
-    // Add many BlocProviders
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => CountriesCubit(CountryRepo())),
@@ -63,10 +66,14 @@ class MyApp extends StatelessWidget {
               ),
             ),
             title: 'Sports App',
-            home: child,
+            home:
+                isFirstTime
+                    ? const OnboardingScreen()
+                    : user == null
+                    ? const LoginScreen()
+                    : const HomeScreen(),
           );
         },
-        child: isFirstTime ? const OnboardingScreen() : const LoginScreen(),
       ),
     );
   }
