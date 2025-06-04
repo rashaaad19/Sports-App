@@ -3,9 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sportsapp/cubit/squad_cubit.dart';
 import 'package:sportsapp/cubit/squad_state.dart';
+import 'package:sportsapp/widgets/dialog_helpers.dart';
 import 'package:sportsapp/widgets/main_app_scaffold.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:sportsapp/widgets/player_stat_dialog.dart';
 
 class SquadScreen extends StatefulWidget {
   final int teamId;

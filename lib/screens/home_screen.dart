@@ -22,7 +22,7 @@ class HomeScreen extends StatelessWidget {
     }
 
     return MainAppScaffold(
-      title:'Home',
+      title: 'Home',
       showDrawer: true,
       child: LayoutBuilder(
         builder: (context, constraints) {
@@ -49,17 +49,29 @@ class HomeScreen extends StatelessWidget {
               buildSportCard(
                 title: 'Basketball',
                 iconPath: 'assets/images/basketball-icon.svg',
-                onTap: () => showComingSoonDialog(context),
+                onTap:
+                    () => showDialog(
+                      context: context,
+                      builder: (context) => ComingSoonDialog(),
+                    ),
               ),
               buildSportCard(
                 title: 'Bowling',
                 iconPath: 'assets/images/bowling-icon.svg',
-                onTap: () => showComingSoonDialog(context),
+                onTap:
+                    () => showDialog(
+                      context: context,
+                      builder: (context) => ComingSoonDialog(),
+                    ),
               ),
               buildSportCard(
                 title: 'Tennis',
                 iconPath: 'assets/images/tennis-icon.svg',
-                onTap: () => showComingSoonDialog(context),
+                onTap:
+                    () => showDialog(
+                      context: context,
+                      builder: (context) => ComingSoonDialog(),
+                    ),
               ),
             ],
           );

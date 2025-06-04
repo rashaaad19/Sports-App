@@ -16,10 +16,12 @@ class OnboardingScreen extends StatefulWidget {
 }
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
-  final PageController controller = PageController();
-  late Timer _timer; // Timer for auto-sliding
 
-  // Onboarding page data
+  //* PageController to manage the onboarding pages
+  final PageController controller = PageController();
+  late Timer _timer; 
+
+  //* Onboarding page data
   final List<OnboardingPage> pages = [
     OnboardingPage(
       title: 'Your Ultimate Sports Hub',
@@ -105,7 +107,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // Skip button that now handles the "Get Started" logic
+             
               TextButton(
                 onPressed: _skipOnboarding,
                 style: TextButton.styleFrom(
@@ -119,7 +121,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   ),
                 ),
               ),
-              // Page indicator
+              //* Page indicator
               SmoothPageIndicator(
                 controller: controller,
                 count: pages.length,
@@ -135,7 +137,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   curve: Curves.easeIn,
                 ),
               ),
-              // Empty container to maintain layout (replaces the removed Next button)
               SizedBox(width: 60.sp),
             ],
           ),

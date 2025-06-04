@@ -24,7 +24,7 @@ class MainAppScaffold extends StatelessWidget {
           title,
           style: TextStyle(
             color: Colors.white,
-            fontSize: 20.sp, // Responsive size using ScreenUtil
+            fontSize: 20.sp, 
             fontWeight: FontWeight.bold,
             letterSpacing: 0.5,
           ),
